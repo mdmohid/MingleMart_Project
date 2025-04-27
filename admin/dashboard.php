@@ -1,7 +1,6 @@
 <!-- Dashboard Page -->
 <?php
-$page_title = "Dashboard - Mingle Mart";
-include 'header.php';
+include '../includes/header.php';
 ?>
 
 <section class="section">
@@ -175,4 +174,4 @@ include 'header.php';
   </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include '../includes/footer.php'; ?>
