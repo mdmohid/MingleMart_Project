@@ -32,9 +32,9 @@
   } */
 
     .navbar-start .navbar-item:hover {
-      color: rgb(11, 10, 10) !important;
+      color: #3273dc !important;
       /* Change text color */
-      background-color: rgb(242, 215, 161) !important;
+      background-color: rgb(225, 225, 225) !important;
       /* Bulma primary blue */
       border-radius: 5px;
       /* Optional: smooth corners */
