@@ -1,0 +1,25 @@
+.hero.is-medium {
+  background-color: #f5f5f5;
+}
+
+.box {
+  border-radius: 10px;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+  background-color: #f5f5f5;
+  padding: 3rem 1.5rem;
+}
+
+.button.is-primary {
+  background-color: #00d1b2;
+}
+
+.button.is-primary:hover {
+  background-color: #00b89c;
+}
