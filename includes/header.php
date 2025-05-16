@@ -125,7 +125,7 @@ if (session_status() === PHP_SESSION_NONE) {
               <a href="/MingleMart_Project/customer/customer-profile.php" class="navbar-item">
                 Customer Profile
               </a>
-              <a href="/MingleMart_Project/logout.php" class="navbar-item">
+              <a href="../config/logout.php" class="navbar-item">
                 Logout
               </a>
 
@@ -134,7 +134,7 @@ if (session_status() === PHP_SESSION_NONE) {
               <a href="/MingleMart_Project/trader/trader-profile.php" class="navbar-item">
                 Trader Profile
               </a>
-              <a href="/MingleMart_Project/logout.php" class="navbar-item">
+              <a href="../config/logout.php" class="navbar-item">
                 Logout
               </a>
 

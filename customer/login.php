@@ -1,11 +1,13 @@
 <?php
 session_start();
-include '../config/config.php'; // Oracle connection
+// include '../includes/header.php';
+include '../config/config.php'; // Connect to Oracle
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $email = $_POST['email'];
   $password = $_POST['password'];
 
+  // Prepare and execute SQL query
   $sql = "SELECT * FROM customers WHERE email = :email";
   $stid = oci_parse($conn, $sql);
   oci_bind_by_name($stid, ":email", $email);
@@ -13,24 +15,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   $row = oci_fetch_assoc($stid);
 
-  if ($row && password_verify($password, $row['PASSWORD'])) {
-    // Set session variables for user id and name
-    $_SESSION['user_id'] = $row['ID'];
-    $_SESSION['user_name'] = $row['NAME'];
 
-    // Redirect to profile or dashboard immediately, no output before header
-    header("Location: customer-profile.php");
-    exit;
+  if ($row && password_verify($password, $row['PASSWORD'])) {
+    // Successful login
+    $_SESSION['user'] = $row['NAME'];
+    $_SESSION['user_id'] = $row['ID'];   // Add this line
+
+    // Redirect immediately after setting session
+    header("Location: customer-profile.php");  // Or dashboard.php if you want
+    exit();
   } else {
-    // Invalid login - show error below form, no header redirect
-    $error = "Invalid email or password.";
+    echo "<p style='color:red;'>Invalid email or password.</p>";
   }
+
+
+
+
+  // if ($row && password_verify($password, $row['PASSWORD'])) {
+  //   // Successful login
+  //   $_SESSION['user'] = $row['NAME'];
+  //   echo "<p class='has-text-success has-text-centered'>Login successful. Welcome, " . htmlspecialchars($row['NAME']) . "!</p>";
+  //   // Redirect if needed
+  //   // header("Location: dashboard.php");
+  //   // exit;
+  // } else {
+  //   echo "<p style='color:red;'>Invalid email or password.</p>";
+  // }
 
   oci_free_statement($stid);
   oci_close($conn);
 }
-
-include '../includes/header.php'; // Include after redirect logic
+include '../includes/header.php';
 ?>
 
 <section class="section">
