@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Form validation for login
+  // Form validation for customers login
   const loginForm = document.querySelector('form[action="login.php"]');
   if (loginForm) {
       loginForm.addEventListener('submit', (e) => {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  // Form validation for signup
+  // Form validation for customers signup(register)
   const signupForm = document.querySelector('form[action="signup.php"]');
   if (signupForm) {
       signupForm.addEventListener('submit', (e) => {
@@ -45,3 +45,39 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 });
+
+
+
+//Form validation for trader register
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('traderForm');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      const password = form.querySelector('input[name="password"]').value;
+      const confirm  = form.querySelector('input[name="confirm_password"]').value;
+
+      if (password !== confirm) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+      }
+    });
+  }
+});
+
+
+
+//form validation for trader login
+document.addEventListener('DOMContentLoaded', () => {
+  const traderLoginForm = document.getElementById('traderLoginForm');
+  if (traderLoginForm) {
+    traderLoginForm.addEventListener('submit', (e) => {
+      const email = traderLoginForm.querySelector('input[name="email"]').value.trim();
+      const password = traderLoginForm.querySelector('input[name="password"]').value.trim();
+      if (!email || !password) {
+        e.preventDefault();
+        alert("Please fill in both email and password.");
+      }
+    });
+  }
+});
+

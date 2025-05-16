@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $result = oci_execute($stid);
 
   if ($result) {
-    echo "<p style='color:green;'>Registration successful! <a href='login.php'>Login</a></p>";
+    echo "<p class='has-text-success has-text-centered'>Registration successful! <a href='login.php'>Login</a></p>";
   } else {
     $e = oci_error($stid);
     echo "<p style='color:red;'>Error: " . $e['message'] . "</p>";
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <section class="section">
   <div class="box has-background-light" style="max-width: 400px; margin: 0 auto;">
-    <h2 class="title has-text-centered">Sign Up</h2>
+    <h2 class="title has-text-centered">Customer Registration</h2>
     <form action="signup.php" method="POST">
       <div class="field">
         <label class="label">Customer's Name</label>
@@ -73,10 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
       <div class="field">
         <div class="control has-text-centered">
-          <button class="button is-primary" type="submit">Sign Up</button>
+          <button class="button is-primary" type="submit">Register</button>
         </div>
       </div>
-      <p class="has-text-centered">I already have an account? <a href="login.php">Sign in</a></p>
+      <p class="has-text-centered">I already have an account? <a href="login.php">Log In</a></p>
     </form>
   </div>
 </section>

@@ -53,7 +53,7 @@
         <a class="navbar-item" href="/MingleMart_Project/index.php">Home</a>
         <a class="navbar-item" href="/MingleMart_Project/customer/about.php">About Us</a>
         <a class="navbar-item" href="/MingleMart_Project/customer/categories.php">Categories</a>
-        <a class="navbar-item" href="/MingleMart_Project/customer/signup.php">Become a trader</a>
+        <a class="navbar-item" href="/MingleMart_Project/trader/register-trader.php">Become a trader</a>
         <a class="navbar-item" href="/MingleMart_Project/customer/contact.php">Contact Us</a>
       </div>
 

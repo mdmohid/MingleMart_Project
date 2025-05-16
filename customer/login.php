@@ -1,5 +1,6 @@
-<?php include '../includes/header.php'; ?>
 <?php
+session_start();
+include '../includes/header.php';
 include '../config/config.php'; // Connect to Oracle
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -17,9 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if ($row && password_verify($password, $row['PASSWORD'])) {
     // Successful login
     $_SESSION['user'] = $row['NAME'];
-    echo "<p style='color:green;'>Login successful. Welcome, " . htmlspecialchars($row['NAME']) . "!</p>";
-    // You can redirect to dashboard here
+    echo "<p class='has-text-success has-text-centered'>Login successful. Welcome, " . htmlspecialchars($row['NAME']) . "!</p>";
+    // Redirect if needed
     // header("Location: dashboard.php");
+    // exit;
   } else {
     echo "<p style='color:red;'>Invalid email or password.</p>";
   }
@@ -29,9 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
+
 <section class="section">
   <div class="box has-background-light" style="max-width: 400px; margin: 0 auto;">
-    <h2 class="title has-text-centered">Login</h2>
+    <h2 class="title has-text-centered">Customer Login</h2>
     <form action="login.php" method="POST">
       <div class="field">
         <label class="label">Email</label>
