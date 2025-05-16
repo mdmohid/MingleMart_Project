@@ -3,27 +3,27 @@ session_start();
 require '../config/config.php';
 include '../includes/header.php';
 
-if (!isset($_SESSION['user'])) {
-  header("Location: login.php");
+if (!isset($_SESSION['trader_id'])) {
+  header("Location: login-trader.php");
   exit();
 }
 
-$customer_id = $_SESSION['user'];
+$trader_id = $_SESSION['trader_id'];
 
-// Fetch customer details
-$query = "SELECT name, email, gender, contact, address, profile_image FROM customers WHERE customer_id = :user";
+// Fetch trader details
+$query = "SELECT name, email, gender, contact, address, profile_image FROM traders WHERE trader_id = :id";
 $statement = oci_parse($conn, $query);
-oci_bind_by_name($statement, ":id", $customer_id);
+oci_bind_by_name($statement, ":id", $trader_id);
 oci_execute($statement);
 $row = oci_fetch_assoc($statement);
 
 // Default image fallback
-$profile_image = !empty($row['PROFILE_IMAGE']) ? "../uploads/customers/" . $row['PROFILE_IMAGE'] : "https://via.placeholder.com/128";
+$profile_image = !empty($row['PROFILE_IMAGE']) ? "../uploads/traders/" . $row['PROFILE_IMAGE'] : "https://via.placeholder.com/128";
 ?>
 
 <section class="section">
   <div class="container">
-    <h1 class="title has-text-centered">Customer Profile</h1>
+    <h1 class="title has-text-centered">Trader Profile</h1>
 
     <div class="box has-text-centered">
       <figure class="image is-128x128 is-inline-block">
@@ -40,7 +40,7 @@ $profile_image = !empty($row['PROFILE_IMAGE']) ? "../uploads/customers/" . $row[
     </div>
 
     <div class="has-text-centered">
-      <a href="customer-settings.php" class="button is-primary mt-4">Edit Profile</a>
+      <a href="trader-settings.php" class="button is-primary mt-4">Edit Profile</a>
     </div>
   </div>
 </section>

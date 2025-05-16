@@ -1,13 +1,12 @@
 <?php
 session_start();
 include '../includes/header.php';
-include '../config/config.php'; // Connect to Oracle
+include '../config/config.php'; // Oracle connection
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $email = $_POST['email'];
   $password = $_POST['password'];
 
-  // Prepare and execute SQL query
   $sql = "SELECT * FROM customers WHERE email = :email";
   $stid = oci_parse($conn, $sql);
   oci_bind_by_name($stid, ":email", $email);
@@ -16,12 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $row = oci_fetch_assoc($stid);
 
   if ($row && password_verify($password, $row['PASSWORD'])) {
-    // Successful login
-    $_SESSION['user'] = $row['NAME'];
+    // Set session variables for user id and name
+    $_SESSION['user_id'] = $row['ID'];
+    $_SESSION['user_name'] = $row['NAME'];
+
     echo "<p class='has-text-success has-text-centered'>Login successful. Welcome, " . htmlspecialchars($row['NAME']) . "!</p>";
-    // Redirect if needed
-    // header("Location: dashboard.php");
-    // exit;
+    // Redirect to profile or dashboard
+    header("Location: profile.php");
+    exit;
   } else {
     echo "<p style='color:red;'>Invalid email or password.</p>";
   }
@@ -30,6 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   oci_close($conn);
 }
 ?>
+<!-- Your login form here -->
+
 
 
 <section class="section">
@@ -47,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="control">
           <input class="input" type="password" name="password" placeholder="********" required>
         </div>
-        <p class="help"><a href="#">Forgot Password?</a></p>
+        <p class="help"><a href="forgot-password-customer.php">Forgot Password?</a></p>
       </div>
       <div class="field">
         <div class="control has-text-centered">

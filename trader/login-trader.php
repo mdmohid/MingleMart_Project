@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="control">
           <input class="input" type="password" name="password" placeholder="********" required>
         </div>
-        <p class="help"><a href="#">Forgot password?</a></p>
+        <p class="help"><a href="forgot-password-trader.php">Forgot password?</a></p>
       </div>
       <div class="field has-text-centered">
         <button class="button is-primary" type="submit">Login</button>

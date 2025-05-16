@@ -94,7 +94,7 @@
 
       <!-- Product Grid -->
       <div class="column is-9">
-        <h4 class="title is-5">Selected Products On Butchers</h4>
+        <h4 class="title is-5">Butcher Products</h4>
         <div class="columns is-multiline" id="product-list">
 
           <!-- Product 1 -->

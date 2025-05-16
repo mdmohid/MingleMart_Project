@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -94,17 +99,87 @@
           </div>
         </div>
 
-        <!-- User Icon -->
+        <!-- User Icon
         <div class="navbar-item">
-          <a class="icon-text" href="/MingleMart_Project/customer/cart.php">
+          <a class="icon-text" href="/MingleMart_Project/customer/customer-profile.php">
             <span class="icon">
               <i class="fas fa-user"></i>
             </span>
           </a>
+        </div> -->
+
+
+
+
+        <!-- User Icon Dropdown -->
+        <div class="navbar-item " id="userDropdown">
+          <a class="navbar-link" id="userDropdownToggle">
+            <span class="icon">
+              <i class="fas fa-user"></i>
+            </span>
+          </a>
+
+          <div class="navbar-dropdown is-right">
+            <?php if (isset($_SESSION['user'])): ?>
+              <!-- Customer Logged In -->
+              <a href="/MingleMart_Project/customer/customer-profile.php" class="navbar-item">
+                Customer Profile
+              </a>
+              <a href="/MingleMart_Project/logout.php" class="navbar-item">
+                Logout
+              </a>
+
+            <?php elseif (isset($_SESSION['trader'])): ?>
+              <!-- Trader Logged In -->
+              <a href="/MingleMart_Project/trader/trader-profile.php" class="navbar-item">
+                Trader Profile
+              </a>
+              <a href="/MingleMart_Project/logout.php" class="navbar-item">
+                Logout
+              </a>
+
+            <?php else: ?>
+              <!-- Not Logged In -->
+              <a href="/MingleMart_Project/customer/login.php" class="navbar-item">
+                Login as Customer
+              </a>
+              <a href="/MingleMart_Project/trader/login-trader.php" class="navbar-item">
+                Login as Trader
+              </a>
+            <?php endif; ?>
+          </div>
         </div>
+
+
+
+
+
       </div>
     </div>
   </nav>
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdown = document.getElementById('userDropdown');
+      const toggle = document.getElementById('userDropdownToggle');
+
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        dropdown.classList.toggle('is-active');
+      });
+
+      // Optional: Close dropdown if clicked outside
+      document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove('is-active');
+        }
+      });
+    });
+  </script>
+
+
 
   <!-- Enable the burger toggle for mobile -->
   <script>
