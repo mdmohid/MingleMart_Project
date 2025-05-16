@@ -1,4 +1,34 @@
 <?php include '../includes/header.php'; ?>
+<?php
+include '../config/config.php'; // Connect to Oracle
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $email = $_POST['email'];
+  $password = $_POST['password'];
+
+  // Prepare and execute SQL query
+  $sql = "SELECT * FROM customers WHERE email = :email";
+  $stid = oci_parse($conn, $sql);
+  oci_bind_by_name($stid, ":email", $email);
+  oci_execute($stid);
+
+  $row = oci_fetch_assoc($stid);
+
+  if ($row && password_verify($password, $row['PASSWORD'])) {
+    // Successful login
+    $_SESSION['user'] = $row['NAME'];
+    echo "<p style='color:green;'>Login successful. Welcome, " . htmlspecialchars($row['NAME']) . "!</p>";
+    // You can redirect to dashboard here
+    // header("Location: dashboard.php");
+  } else {
+    echo "<p style='color:red;'>Invalid email or password.</p>";
+  }
+
+  oci_free_statement($stid);
+  oci_close($conn);
+}
+?>
+
 <section class="section">
   <div class="box has-background-light" style="max-width: 400px; margin: 0 auto;">
     <h2 class="title has-text-centered">Login</h2>
@@ -25,4 +55,7 @@
     </form>
   </div>
 </section>
+
+<script src="../assets/js/script.js"></script>
+
 <?php include '../includes/footer.php'; ?>

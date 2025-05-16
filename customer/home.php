@@ -46,10 +46,10 @@
     <div class="container">
       <div class="carousel">
         <div class="carousel-item">
-          <img src="../assets/images/customer/veg2.jpg" alt="Slide 1" class="carousel-img">
+          <img src="/MingleMart_Project/assets/images/customer/veg2.jpg" alt="Slide 1" class="carousel-img">
         </div>
         <div class="carousel-item">
-          <img src="../assets/images/customer/banner.jpg" alt="Slide 2" class="carousel-img">
+          <img src="/MingleMart_Project/assets/images/customer/banner.jpg" alt="Slide 2" class="carousel-img">
         </div>
       </div>
     </div>
@@ -63,19 +63,19 @@
       <div class="columns">
         <div class="column has-text-centered">
           <figure class="image is-square">
-            <img src="../assets/images/customer/food.jpg" alt="Food">
+            <img src="/MingleMart_Project/assets/images/customer/food.jpg" alt="Food">
           </figure>
           <p class="has-text-weight-bold mt-3">Food</p>
         </div>
         <div class="column has-text-centered">
           <figure class="image is-square">
-            <img src="../assets/images/customer/catogery.jpg" alt="Meat">
+            <img src="/MingleMart_Project/assets/images/customer/catogery.jpg" alt="Meat">
           </figure>
           <p class="has-text-weight-bold mt-3">Meat</p>
         </div>
         <div class="column has-text-centered">
           <figure class="image is-square">
-            <img src="../assets/images/customer/liquor.jpg" alt="Liquor">
+            <img src="/MingleMart_Project/assets/images/customer/liquor.jpg" alt="Liquor">
           </figure>
           <p class="has-text-weight-bold mt-3">Liquor</p>
         </div>
@@ -94,17 +94,17 @@
       <div class="columns">
         <div class="column has-text-centered">
           <figure class="image is-square">
-            <img src="../assets/images/customer/freshveg.jpg" alt="Fresh Veg">
+            <img src="/MingleMart_Project/assets/images/customer/freshveg.jpg" alt="Fresh Veg">
           </figure>
         </div>
         <div class="column has-text-centered">
           <figure class="image is-square">
-            <img src="../assets/images/customer/freshbakery.jpg" alt="Fresh Bakery">
+            <img src="/MingleMart_Project/assets/images/customer/freshbakery.jpg" alt="Fresh Bakery">
           </figure>
         </div>
         <div class="column has-text-centered">
           <figure class="image is-square">
-            <img src="../assets/images/customer/freshmeat.jpg" alt="Fresh Meat">
+            <img src="/MingleMart_Project/assets/images/customer/freshmeat.jpg" alt="Fresh Meat">
           </figure>
         </div>
       </div>
@@ -123,7 +123,7 @@
         <div class="column has-text-centered">
           <div class="box">
             <figure class="image is-square">
-              <img src="../assets/images/customer/1bread.jpg" alt="Bread">
+              <img src="/MingleMart_Project/assets/images/customer/1bread.jpg" alt="Bread">
             </figure>
             <p class="has-text-weight-bold mt-3">BREAD</p>
             <p>$99</p>
@@ -132,7 +132,7 @@
         <div class="column has-text-centered">
           <div class="box">
             <figure class="image is-square">
-              <img src="../assets/images/customer/dates.jpg" alt="Dates">
+              <img src="/MingleMart_Project/assets/images/customer/dates.jpg" alt="Dates">
             </figure>
             <p class="has-text-weight-bold mt-3">Dates</p>
             <p>$99</p>
@@ -141,7 +141,7 @@
         <div class="column has-text-centered">
           <div class="box">
             <figure class="image is-square">
-              <img src="../assets/images/customer/meatbanner.jpg" alt="Meat">
+              <img src="/MingleMart_Project/assets/images/customer/meatbanner.jpg" alt="Meat">
             </figure>
             <p class="has-text-weight-bold mt-3">MEAT</p>
             <p>$99</p>

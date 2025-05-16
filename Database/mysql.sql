@@ -1,5 +1,4 @@
-CREATE DATABASE minglemart;
-USE minglemart;
+
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,

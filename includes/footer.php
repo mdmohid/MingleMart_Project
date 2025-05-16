@@ -48,12 +48,6 @@
     color: #ccc;
     font-size: 0.9rem;
   }
-
-  /* @media (max-width: 768px) {
-    .footer-dark .column {
-      margin-bottom: 2rem;
-    }
-  } */
 </style>
 
 <footer class="footer footer-dark">
@@ -61,28 +55,25 @@
     <div class="columns is-multiline">
       <!-- Contact Info -->
       <div class="column">
-        <a href="index.php">
-          <img src="../assets/images/customer/logo.png" alt="MingleMart" style="max-width: 120px; height: auto;" />
+        <a href="/MingleMart_Project/index.php">
+          <img src="/MingleMart_Project/assets/images/customer/logo.png" alt="MingleMart" style="max-width: 120px; height: auto;" />
         </a>
-
         <p class="has-text-weight-bold" style="text-decoration: underline;">Contact Information</p>
         <p>Email: minglemart786@gmail.com</p>
         <p>Phone: +123-456-7890</p>
         <p>Address: Thapathali, Kathmandu, Nepal</p>
       </div>
 
-
       <!-- Links -->
       <div class="column">
         <h3 class="title">LINKS</h3>
         <ul>
-          <li><a href="/index.php">Home</a></li>
-          <li><a href="../customer/categories.php">Categories</a></li>
-          <li><a href="../customer/contact.php">Contact Us</a></li>
+          <li><a href="/MingleMart_Project/index.php">Home</a></li>
+          <li><a href="/MingleMart_Project/customer/categories.php">Categories</a></li>
+          <li><a href="/MingleMart_Project/customer/contact.php">Contact Us</a></li>
           <li><a href="#">Profile</a></li>
-          <li><a href="../customer/cart.php">Cart</a></li>
-          <a href="../customer/login.php">Login</a> / <a href="../customer/signup.php">Register</a>
-
+          <li><a href="/MingleMart_Project/customer/cart.php">Cart</a></li>
+          <li><a href="/MingleMart_Project/customer/login.php">Login</a> / <a href="/MingleMart_Project/customer/signup.php">Register</a></li>
         </ul>
       </div>
 
