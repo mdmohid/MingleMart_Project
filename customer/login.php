@@ -1,6 +1,5 @@
 <?php
 session_start();
-include '../includes/header.php';
 include '../config/config.php'; // Oracle connection
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -19,25 +18,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['user_id'] = $row['ID'];
     $_SESSION['user_name'] = $row['NAME'];
 
-    echo "<p class='has-text-success has-text-centered'>Login successful. Welcome, " . htmlspecialchars($row['NAME']) . "!</p>";
-    // Redirect to profile or dashboard
-    header("Location: profile.php");
+    // Redirect to profile or dashboard immediately, no output before header
+    header("Location: customer-profile.php");
     exit;
   } else {
-    echo "<p style='color:red;'>Invalid email or password.</p>";
+    // Invalid login - show error below form, no header redirect
+    $error = "Invalid email or password.";
   }
 
   oci_free_statement($stid);
   oci_close($conn);
 }
+
+include '../includes/header.php'; // Include after redirect logic
 ?>
-<!-- Your login form here -->
-
-
 
 <section class="section">
   <div class="box has-background-light" style="max-width: 400px; margin: 0 auto;">
     <h2 class="title has-text-centered">Customer Login</h2>
+
+    <?php if (!empty($error)) : ?>
+      <p style="color:red; text-align:center;"><?= htmlspecialchars($error) ?></p>
+    <?php endif; ?>
+
     <form action="login.php" method="POST">
       <div class="field">
         <label class="label">Email</label>
