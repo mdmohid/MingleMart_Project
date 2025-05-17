@@ -1,50 +1,53 @@
-<?php include '../includes/header.php'; ?>
+ <?php include '../includes/header.php'; ?>
 
-<section class="section">
-  <div class="container">
-    <div class="columns is-vcentered">
-      <div class="column is-one-third">
-        <figure class="image is-4by3">
-          <div class="has-background-grey-lighter" style="height: 300px;"></div>
-        </figure>
-        <p class="has-text-centered mt-2">Jae Namaz</p>
-        <p class="has-text-centered has-text-weight-bold">$99</p>
-      </div>
 
-      <div class="column">
-        <h1 class="title">Product Name: Lorem Ipsum Widget</h1>
-        <p class="subtitle">Description:</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+ <?php
+  include '../config/config.php';
 
-        <div class="buttons mt-4">
-          <button class="button is-primary">Add to Cart</button>
-          <button class="button is-success">Buy Now</button>
-        </div>
+  // Get product ID from URL
+  if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    die("Invalid product ID.");
+  }
+  $product_id = (int)$_GET['id'];
 
-        <div class="content mt-5">
-          <h2 class="subtitle">Key Features:</h2>
-          <ul>
-            <li>✔ Lorem ipsum dolor sit amet.</li>
-            <li>✔ Ut enim ad minim veniam.</li>
-            <li>✔ Duis aute irure dolor in reprehenderit.</li>
-          </ul>
+  // Fetch product from DB
+  $sql = "SELECT product_id, trader_id, product_name, description, price, image_url FROM products WHERE product_id = :pid";
+  $stid = oci_parse($conn, $sql);
+  oci_bind_by_name($stid, ':pid', $product_id);
+  oci_execute($stid);
 
-          <h2 class="subtitle mt-5">Specifications:</h2>
-          <ul>
-            <li>Material: Lorem Ipsum Alloy</li>
-            <li>Color: Dolor Sit</li>
-            <li>Size: Varies</li>
-            <li>Weight: 500g</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  $product = oci_fetch_assoc($stid);
+  if (!$product) {
+    die("Product not found.");
+  }
 
-    <div class="section">
-      <h2 class="title is-4 has-text-centered">Recommended Products</h2>
-      <!-- Placeholder for recommended products -->
-    </div>
-  </div>
-</section>
+  ?>
 
-<?php include '../includes/footer.php'; ?>
+ <!DOCTYPE html>
+ <html lang="en">
+
+ <head>
+   <meta charset="UTF-8" />
+   <title><?php echo htmlspecialchars($product['PRODUCT_NAME']); ?></title>
+ </head>
+
+ <body>
+   <h1><?php echo htmlspecialchars($product['PRODUCT_NAME']); ?></h1>
+   <img src="<?php echo htmlspecialchars($product['IMAGE_URL']); ?>" alt="<?php echo htmlspecialchars($product['PRODUCT_NAME']); ?>" style="max-width:200px;">
+   <p><?php echo nl2br(htmlspecialchars($product['DESCRIPTION'])); ?></p>
+   <p>Price: $<?php echo number_format($product['PRICE'], 2); ?></p>
+
+   <form action="add_to_cart.php" method="post">
+     <input type="hidden" name="product_id" value="<?php echo $product['PRODUCT_ID']; ?>" />
+     Quantity: <input type="number" name="quantity" value="1" min="1" />
+     <button type="submit">Add to Cart</button>
+   </form>
+
+
+   <?php include '../includes/footer.php'; ?>
+
+
+
+ </body>
+
+ </html>

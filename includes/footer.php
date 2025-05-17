@@ -78,32 +78,72 @@
       </div>
 
       <!-- Help -->
+      <!-- <div class="column">
+        <h3 class="title">Help & Support</h3>
+        <ul>
+          <li><a href="../help&support/faq.php">FAQ</a></li>
+          <li><a href="../help&support/returns.php">Return & Refund Policy</a></li>
+          <li><a href="../help&support/shipping.php">Shipping Information</a></li>
+          <li><a href="../help&support/terms.php">Terms & Conditions</a></li>
+          <li><a href="../help&support/privacy.php">Privacy Policy</a></li>
+        </ul>
+      </div> -->
+
+      <!-- Help -->
       <div class="column">
         <h3 class="title">Help & Support</h3>
         <ul>
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Return & Refund Policy</a></li>
-          <li><a href="#">Shipping Information</a></li>
-          <li><a href="#">Terms & Conditions</a></li>
-          <li><a href="#">Privacy Policy</a></li>
+          <li><a onclick="openModal('faqModal')">FAQ</a></li>
+          <li><a onclick="openModal('returnModal')">Return & Refund Policy</a></li>
+          <li><a onclick="openModal('shippingModal')">Shipping Information</a></li>
+          <li><a onclick="openModal('termsModal')">Terms & Conditions</a></li>
+          <li><a onclick="openModal('privacyModal')">Privacy Policy</a></li>
         </ul>
       </div>
 
+
+
+
       <!-- Social & Payment -->
       <div class="column">
-        <h3 class="title">Social Media Links</h3>
+        <!-- <h3 class="title">Social Media Links</h3>
         <div class="social-icons">
           <a href="#" style="color: #3b5998;"><i class="fab fa-facebook-f icon"></i></a>
           <a href="#" style="color: #E1306C;"><i class="fab fa-instagram icon"></i></a>
           <a href="#" style="color:#1DA1F2;"><i class="fab fa-twitter icon"></i></a>
           <a href="#" style="color: #0077b5;"><i class="fab fa-linkedin-in icon"></i></a>
+        </div> -->
+
+        <h3 class="title">Social Media Links</h3>
+        <div class="social-icons">
+          <a onclick="openModal('modal-facebook')" style="color: #3b5998;"><i class="fab fa-facebook-f icon"></i></a>
+          <a onclick="openModal('modal-instagram')" style="color: #E1306C;"><i class="fab fa-instagram icon"></i></a>
+          <a onclick="openModal('modal-twitter')" style="color:#1DA1F2;"><i class="fab fa-twitter icon"></i></a>
+          <a onclick="openModal('modal-linkedin')" style="color: #0077b5;"><i class="fab fa-linkedin-in icon"></i></a>
         </div>
+
+
+
         <br>
-        <h3 class="title">Payment Methods</h3>
+        <!-- <h3 class="title">Payment Methods</h3>
         <div class="payment-methods">
           <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal">
           <img src="https://logos-world.net/wp-content/uploads/2021/03/Stripe-Logo.png" alt="Stripe">
+        </div> -->
+
+        <h3 class="title">Payment Methods</h3>
+        <div class="payment-methods">
+          <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg"
+            alt="PayPal"
+            style="cursor: pointer;"
+            onclick="openModal('modal-paypal')">
+
+          <img src="https://logos-world.net/wp-content/uploads/2021/03/Stripe-Logo.png"
+            alt="Stripe"
+            style="cursor: pointer;"
+            onclick="openModal('modal-stripe')">
         </div>
+
       </div>
     </div>
   </div>
@@ -112,3 +152,7 @@
 <div class="footer-bottom-dark">
   © 2025 MingleMart. All Rights Reserved
 </div>
+
+<?php include 'help-modals.php' ?>
+<?php include 'social-modals.php' ?>
+<?php include 'payment-modals.php' ?>

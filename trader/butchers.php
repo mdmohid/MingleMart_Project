@@ -121,8 +121,8 @@
                 <p class="has-text-weight-bold">$12.99</p>
                 <p class="has-text-warning">★★★★★</p>
                 <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
+                  <a href="product-detail.php" class="button is-small is-link">View Details</a>
+                  <a href="../customer/add-tocart.php" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
                 </div>
               </div>
             </div>
