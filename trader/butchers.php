@@ -90,6 +90,16 @@
           <label class="checkbox"><input type="checkbox" /> Bakery</label><br />
           <label class="checkbox"><input type="checkbox" /> Greengrocer</label>
         </div>
+
+        <div class="box">
+          <p><strong>Price</strong></p>
+          <div class="field has-addons">
+            <p class="control"><input class="input" type="number" placeholder="Min"></p>
+            <p class="control"><input class="input" type="number" placeholder="Max"></p>
+          </div>
+        </div>
+
+
       </aside>
 
       <!-- Product Grid -->
@@ -225,12 +235,12 @@
 
         </div>
 
-        <!-- Pagination -->
+        <!-- Pagination
         <nav class="pagination is-centered mt-4" role="navigation">
           <a class="pagination-link is-current">1</a>
           <a class="pagination-link">2</a>
           <a class="pagination-link">3</a>
-        </nav>
+        </nav> -->
 
       </div>
     </div>
