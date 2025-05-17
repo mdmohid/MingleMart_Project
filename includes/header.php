@@ -63,8 +63,7 @@ if (session_status() === PHP_SESSION_NONE) {
       </div>
 
       <div class="navbar-end">
-        <!-- Search -->
-        <div class="navbar-item">
+        <!-- <div class="navbar-item">
           <div class="field has-addons">
             <div class="control">
               <input class="input is-small" type="text" placeholder="Search">
@@ -77,7 +76,67 @@ if (session_status() === PHP_SESSION_NONE) {
               </a>
             </div>
           </div>
+        </div> -->
+
+        <!-- Search Form -->
+        <div class="navbar-item">
+
+          <!-- <div class="field has-addons">
+            <div class="control">
+              <input class="input is-small" type="text" id="searchBox" placeholder="Search products..." onkeyup="searchSuggestions(this.value)">
+              <div id="suggestionsBox" class="box" style="position:absolute; z-index:1000; display:none;"></div>
+            </div>
+            <div class="control">
+              <button class="button is-small is-light" onclick="performSearch()">
+                <span class="icon"><i class="fas fa-search"></i></span>
+              </button>
+            </div>
+          </div> -->
+
+          <div class="field has-addons">
+            <div class="control">
+              <input class="input is-small" type="text" id="searchBox" placeholder="Search products..." onkeyup="searchSuggestions(this.value)">
+              <div id="suggestionsBox" class="box" style="position:absolute; z-index:1000; display:none;"></div>
+            </div>
+            <div class="control">
+              <button class="button is-small is-light" onclick="performSearch()">
+                <span class="icon"><i class="fas fa-search"></i></span>
+              </button>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
         </div>
+
+
+        <!-- <div class="navbar-item">
+          <div class="field has-addons">
+            <div class="control">
+              <input class="input is-small" type="text" id="searchBox" placeholder="Search products..." onkeyup="searchSuggestions(this.value)">
+              <div id="suggestionsBox" class="box" style="position:absolute; z-index:1000; display:none;"></div>
+            </div>
+            <div class="control">
+              <button class="button is-small is-light" onclick="performSearch()">
+                <span class="icon"><i class="fas fa-search"></i></span>
+              </button>
+            </div>
+          </div>
+        </div> -->
+
+
+
+
+
+
+
+
+
 
         <!-- Cart -->
         <div class="navbar-item">
@@ -159,7 +218,7 @@ if (session_status() === PHP_SESSION_NONE) {
   </nav>
 
 
-
+  <!-- user icon -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const dropdown = document.getElementById('userDropdown');
@@ -193,6 +252,47 @@ if (session_status() === PHP_SESSION_NONE) {
       });
     });
   </script>
+
+
+  <!-- search box -->
+  <script>
+    function searchSuggestions(query) {
+      if (query.length < 2) {
+        document.getElementById("suggestionsBox").style.display = "none";
+        return;
+      }
+
+      fetch(`../includes/search/suggest.php?q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          const box = document.getElementById("suggestionsBox");
+          if (data.length === 0) {
+            box.innerHTML = "<div>No suggestions found</div>";
+          } else {
+            box.innerHTML = data.map(item =>
+              `<div class='dropdown-item' style='padding:5px; cursor:pointer;' onclick="selectSuggestion('${item.replace(/'/g, "\\'")}')">${item}</div>`
+            ).join("");
+          }
+          box.style.display = "block";
+        });
+
+    }
+
+    function selectSuggestion(val) {
+      document.getElementById("searchBox").value = val;
+      document.getElementById("suggestionsBox").style.display = "none";
+      performSearch();
+    }
+
+    function performSearch() {
+      const query = document.getElementById("searchBox").value.trim();
+      if (query) {
+        window.location.href = `../includes/search/results.php?q=${encodeURIComponent(query)}`;
+      }
+    }
+  </script>
+
+
 </body>
 
 </html>
