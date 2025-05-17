@@ -71,7 +71,7 @@
           <li><a href="/MingleMart_Project/index.php">Home</a></li>
           <li><a href="/MingleMart_Project/customer/categories.php">Categories</a></li>
           <li><a href="/MingleMart_Project/customer/contact.php">Contact Us</a></li>
-          <li><a href="#">Profile</a></li>
+          <!-- <li><a href="#">Profile</a></li> -->
           <li><a href="/MingleMart_Project/customer/cart.php">Cart</a></li>
           <li><a href="/MingleMart_Project/customer/login.php">Login</a> / <a href="/MingleMart_Project/customer/signup.php">Register</a></li>
         </ul>
