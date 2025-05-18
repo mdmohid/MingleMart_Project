@@ -1,7 +1,9 @@
 <?php session_start(); // Start the session
-include '../includes/header.php'; ?>
+// include '../includes/header.php'; 
+?>
 <?php
 include '../config/config.php'; // Include the OCI DB connection
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $name     = $_POST['name'];
@@ -9,38 +11,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $password = $_POST['password'];
   $confirm  = $_POST['confirm_password'];
 
-  // Simple password match check
   if ($password !== $confirm) {
     echo "<p style='color:red;'>Passwords do not match!</p>";
     exit;
   }
 
-  // Optional: Hash password
   $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-  // Prepare SQL insert statement
-  $sql = "INSERT INTO customers (name, email, password) VALUES (:name, :email, :password)";
-  $stid = oci_parse($conn, $sql);
+  // Generate 6-digit OTP
+  $otp = rand(100000, 999999);
 
-  // Bind parameters
-  oci_bind_by_name($stid, ":name", $name);
-  oci_bind_by_name($stid, ":email", $email);
-  oci_bind_by_name($stid, ":password", $hashed_password);
+  //  Store in session
+  $_SESSION['otp'] = $otp;
+  $_SESSION['temp_user'] = [
+    'name' => $name,
+    'email' => $email,
+    'password' => $hashed_password
+  ];
 
-  // Execute and check result
-  $result = oci_execute($stid);
+  //  Send OTP to email
+  $subject = "MingleMart - OTP Verification";
+  $message = "Dear $name,\n\nYour OTP is: $otp\n\nPlease enter this to complete your registration.";
+  $headers = "From: alammohid855@gmail.com";
 
-  if ($result) {
-    echo "<p class='has-text-success has-text-centered'>Registration successful! <a href='login.php'>Login</a></p>";
+  if (mail($email, $subject, $message, $headers)) {
+    // Redirect to OTP verification page
+    header("Location: verify-otp.php");
+    exit;
   } else {
-    $e = oci_error($stid);
-    echo "<p style='color:red;'>Error: " . $e['message'] . "</p>";
+    echo "<p style='color:red;'>Failed to send OTP email.</p>";
   }
-
-  // Free resources
-  oci_free_statement($stid);
-  oci_close($conn);
 }
+include '../includes/header.php';
+
+
+// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//   $name     = $_POST['name'];
+//   $email    = $_POST['email'];
+//   $password = $_POST['password'];
+//   $confirm  = $_POST['confirm_password'];
+
+//   // Simple password match check
+//   if ($password !== $confirm) {
+//     echo "<p style='color:red;'>Passwords do not match!</p>";
+//     exit;
+//   }
+
+//   // Optional: Hash password
+//   $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+//   // Prepare SQL insert statement
+//   $sql = "INSERT INTO customers (name, email, password) VALUES (:name, :email, :password)";
+//   $stid = oci_parse($conn, $sql);
+
+//   // Bind parameters
+//   oci_bind_by_name($stid, ":name", $name);
+//   oci_bind_by_name($stid, ":email", $email);
+//   oci_bind_by_name($stid, ":password", $hashed_password);
+
+//   // Execute and check result
+//   $result = oci_execute($stid);
+
+//   if ($result) {
+//     echo "<p class='has-text-success has-text-centered'>Registration successful! <a href='login.php'>Login</a></p>";
+//   } else {
+//     $e = oci_error($stid);
+//     echo "<p style='color:red;'>Error: " . $e['message'] . "</p>";
+//   }
+
+//   // Free resources
+//   oci_free_statement($stid);
+//   oci_close($conn);
+// }
 ?>
 
 <section class="section">
