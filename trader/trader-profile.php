@@ -39,8 +39,10 @@ $profile_image = !empty($row['PROFILE_IMAGE']) ? "../uploads/traders/" . $row['P
       </div>
     </div>
 
-    <div class="has-text-centered">
-      <a href="trader-settings.php" class="button is-primary mt-4">Edit Profile</a>
+    <!-- Buttons -->
+    <div class="buttons is-centered mt-4">
+      <a href="trader-settings.php" class="button is-primary">Edit Profile</a>
+      <a href="../config/logout.php" class="button is-danger">Logout</a>
     </div>
   </div>
 </section>

@@ -12,7 +12,7 @@ $success = "";
 $error = "";
 
 // Fetch current trader data
-$query = "SELECT name, email, profile_image FROM traders WHERE trader_id = :id";
+$query = "SELECT name, email, contact, gender, address, profile_image FROM traders WHERE trader_id = :id";
 $statement = oci_parse($conn, $query);
 oci_bind_by_name($statement, ":id", $trader_id);
 oci_execute($statement);
@@ -22,6 +22,9 @@ $row = oci_fetch_assoc($statement);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $name = $_POST['name'] ?? '';
   $email = $_POST['email'] ?? '';
+  $gender = $_POST['gender'] ?? '';
+  $contact = $_POST['contact'] ?? '';
+  $address = $_POST['address'] ?? '';
   $profile_image = $row['PROFILE_IMAGE'];
 
   // Handle profile image upload
@@ -38,10 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Update the trader info
-  $update = "UPDATE traders SET name = :name, email = :email, profile_image = :image WHERE trader_id = :id";
+  $update = "UPDATE traders SET name = :name, email = :email, gender = :gender, contact = :contact, address = :address, profile_image = :image WHERE trader_id = :id";
   $stmt = oci_parse($conn, $update);
   oci_bind_by_name($stmt, ":name", $name);
   oci_bind_by_name($stmt, ":email", $email);
+  oci_bind_by_name($stmt, ":gender", $gender);
+  oci_bind_by_name($stmt, ":contact", $contact);
+  oci_bind_by_name($stmt, ":address", $address);
   oci_bind_by_name($stmt, ":image", $profile_image);
   oci_bind_by_name($stmt, ":id", $trader_id);
 
@@ -49,11 +55,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $success = "Profile updated successfully.";
     $row['NAME'] = $name;
     $row['EMAIL'] = $email;
+    $row['GENDER'] = $gender;
+    $row['CONTACT'] = $contact;
+    $row['ADDRESS'] = $address;
     $row['PROFILE_IMAGE'] = $profile_image;
   } else {
     $error = "Update failed.";
   }
 }
+
+
+include '../includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -91,6 +103,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
         </div>
 
+
+        <div class="field">
+          <label class="label">Gender</label>
+          <div class="control">
+            <div class="select">
+              <select name="gender" required>
+                <option value="" <?= empty($row['GENDER']) ? 'selected' : '' ?>>Select Gender</option>
+                <option value="Male" <?= ($row['GENDER'] ?? '') === 'Male' ? 'selected' : '' ?>>Male</option>
+                <option value="Female" <?= ($row['GENDER'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
+                <option value="Other" <?= ($row['GENDER'] ?? '') === 'Other' ? 'selected' : '' ?>>Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Contact</label>
+          <div class="control">
+            <input class="input" type="text" name="contact" value="<?= htmlspecialchars($row['CONTACT']) ?>" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Address</label>
+          <div class="control">
+            <textarea class="textarea" name="address" required><?= htmlspecialchars($row['ADDRESS']) ?></textarea>
+          </div>
+        </div>
+
+
         <div class="field">
           <label class="label">Profile Image</label>
           <?php if ($row['PROFILE_IMAGE']): ?>
@@ -111,6 +153,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </form>
     </div>
   </section>
+
+  <?php include '../includes/footer.php'; ?>
 </body>
 
 </html>

@@ -4,6 +4,7 @@ include '../includes/header.php';
 include '../config/config.php';
 
 $error_modal = false;
+$success_modal = false;
 $success_message = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -19,10 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     oci_bind_by_name($stmt, ":password", $user['password']);
 
     if (oci_execute($stmt)) {
-      $success_message = "<p class='has-text-success has-text-centered'>Registration verified and successful! <a href='login.php'>Login</a></p>";
+      $success_modal = true;
+      $success_message = "Registration verified and successful! <a href='login.php'>Login</a>";
     } else {
       $e = oci_error($stmt);
-      $success_message = "<p style='color:red;'>DB Error: " . $e['message'] . "</p>";
+      $error_modal = true;
+      $success_message = "DB Error: " . $e['message'];
     }
 
     unset($_SESSION['otp'], $_SESSION['temp_user']);
@@ -34,10 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<?= $success_message ?>
-
-<!-- OTP Form Modal (Always shown unless success) -->
-<?php if (!$success_message): ?>
+<!-- OTP Form Modal (always shown unless success) -->
+<?php if (!$success_modal): ?>
   <div class="modal is-active" id="otpModal">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -62,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   </div>
 <?php endif; ?>
 
-<!-- Error Modal (only if incorrect OTP) -->
+<!-- Error Modal -->
 <?php if ($error_modal): ?>
   <div class="modal is-active" id="errorModal">
     <div class="modal-background"></div>
@@ -72,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button class="delete" aria-label="close" onclick="closeErrorModal()"></button>
       </header>
       <section class="modal-card-body">
-        <p class="has-text-danger">Incorrect OTP. Please try again.</p>
+        <p class="has-text-danger"><?= $success_message ?></p>
       </section>
       <footer class="modal-card-foot">
         <button class="button is-danger" onclick="closeErrorModal()">Close</button>
@@ -81,9 +82,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   </div>
 <?php endif; ?>
 
+<!-- Success Modal -->
+<?php if ($success_modal): ?>
+  <div class="modal is-active" id="successModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head has-background-success-light">
+        <p class="modal-card-title">Success</p>
+        <button class="delete" aria-label="close" onclick="closeSuccessModal()"></button>
+      </header>
+      <section class="modal-card-body">
+        <p class="has-text-success"><?= $success_message ?></p>
+      </section>
+      <footer class="modal-card-foot">
+        <a class="button is-success" href="login.php">Go to Login</a>
+      </footer>
+    </div>
+  </div>
+<?php endif; ?>
+
 <script>
   function closeErrorModal() {
     document.getElementById('errorModal').classList.remove('is-active');
+  }
+
+  function closeSuccessModal() {
+    document.getElementById('successModal').classList.remove('is-active');
   }
 </script>
 
