@@ -1,38 +1,86 @@
 <?php
 session_start();
+include '../config/config.php';
+include '../includes/header.php';
+
+// Check customer login
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit();
+}
+
+$customer_id = $_SESSION['user_id'];
+
+// Fetch cart items for the customer
+$sql = "
+  SELECT 
+    p.product_name, 
+    p.price, 
+    c.quantity, 
+    (p.price * c.quantity) AS subtotal
+  FROM carts c
+  JOIN products p ON c.product_id = p.product_id
+  WHERE c.id = :customer_id
+";
+
+$stid = oci_parse($conn, $sql);
+oci_bind_by_name($stid, ":customer_id", $customer_id);
+oci_execute($stid);
+
+$cartItems = [];
+$total = 0;
+
+while ($row = oci_fetch_assoc($stid)) {
+  $cartItems[] = $row;
+  $total += $row['SUBTOTAL'];
+}
 ?>
-<?php include '../includes/header.php' ?>
 
-<h1>Your Cart</h1>
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-centered">Your Cart</h1>
 
-<?php if (empty($_SESSION['cart'])): ?>
-  <p>Your cart is empty.</p>
-<?php else: ?>
-  <table border="1" cellpadding="10">
-    <tr>
-      <th>Product</th>
-      <th>Price</th>
-      <th>Quantity</th>
-      <th>Subtotal</th>
-    </tr>
-    <?php
-    $total = 0;
-    foreach ($_SESSION['cart'] as $id => $item):
-      $subtotal = $item['price'] * $item['quantity'];
-      $total += $subtotal;
-    ?>
-      <tr>
-        <td><?php echo htmlspecialchars($item['product_name']); ?></td>
-        <td>$<?php echo number_format($item['price'], 2); ?></td>
-        <td><?php echo $item['quantity']; ?></td>
-        <td>$<?php echo number_format($subtotal, 2); ?></td>
-      </tr>
-    <?php endforeach; ?>
-    <tr>
-      <td colspan="3" align="right"><strong>Total:</strong></td>
-      <td><strong>$<?php echo number_format($total, 2); ?></strong></td>
-    </tr>
-  </table>
-<?php endif; ?>
+    <?php if (empty($cartItems)): ?>
+      <div class="notification is-warning has-text-centered">
+        Your cart is empty.
+      </div>
+    <?php else: ?>
+      <div class="box">
+        <table class="table is-fullwidth is-striped is-hoverable">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price ($)</th>
+              <th>Quantity</th>
+              <th>Subtotal ($)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($cartItems as $item): ?>
+              <tr>
+                <td><?= htmlspecialchars($item['PRODUCT_NAME']) ?></td>
+                <td>$<?= number_format($item['PRICE'], 2) ?></td>
+                <td><?= $item['QUANTITY'] ?></td>
+                <td>$<?= number_format($item['SUBTOTAL'], 2) ?></td>
+              </tr>
+            <?php endforeach; ?>
+            <tr>
+              <th colspan="3" class="has-text-right">Total:</th>
+              <th>$<?= number_format($total, 2) ?></th>
+            </tr>
+          </tbody>
+        </table>
 
-<?php include '../includes/footer.php' ?>
+        <div class="has-text-centered mt-4">
+          <a href="checkout.php" class="button is-primary">Proceed to Checkout</a>
+        </div>
+      </div>
+    <?php endif; ?>
+  </div>
+</section>
+
+<?php
+oci_free_statement($stid);
+oci_close($conn);
+include '../includes/footer.php';
+?>

@@ -2,52 +2,58 @@
 session_start();
 include '../config/config.php';
 
-// Validate inputs
-if (!isset($_POST['product_id'], $_POST['quantity'])) {
-  die("Invalid request.");
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php?redirect=cart.php");
+  exit();
 }
 
-$product_id = (int)$_POST['product_id'];
-$quantity = (int)$_POST['quantity'];
+$customer_id = $_SESSION['user_id'];
+$product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
+$quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
 
-if ($quantity < 1) {
-  die("Invalid quantity.");
-}
+if ($product_id > 0 && $quantity > 0) {
+  // Check if the product is already in the cart
+  $checkSql = "SELECT quantity FROM carts WHERE id = :id AND product_id = :product_id";
+  $checkStmt = oci_parse($conn, $checkSql);
+  oci_bind_by_name($checkStmt, ":id", $customer_id);
+  oci_bind_by_name($checkStmt, ":product_id", $product_id);
+  oci_execute($checkStmt);
 
-// Optionally, verify product exists before adding to cart
-$sql = "SELECT product_id, product_name, price FROM products WHERE product_id = :pid";
-$stid = oci_parse($conn, $sql);
-oci_bind_by_name($stid, ':pid', $product_id);
-oci_execute($stid);
-$product = oci_fetch_assoc($stid);
+  if ($row = oci_fetch_assoc($checkStmt)) {
+    // Product exists in cart: update quantity
+    $updateSql = "UPDATE carts SET quantity = quantity + :quantity WHERE id = :id AND product_id = :product_id";
+    $updateStmt = oci_parse($conn, $updateSql);
+    oci_bind_by_name($updateStmt, ":quantity", $quantity);
+    oci_bind_by_name($updateStmt, ":id", $customer_id);
+    oci_bind_by_name($updateStmt, ":product_id", $product_id);
+    oci_execute($updateStmt);
+    oci_free_statement($updateStmt);
+  } else {
+    // Insert new row into cart
+    $insertSql = "INSERT INTO carts (id, product_id, quantity) VALUES (:id, :product_id, :quantity)";
+    $insertStmt = oci_parse($conn, $insertSql);
+    oci_bind_by_name($insertStmt, ":id", $customer_id);
+    oci_bind_by_name($insertStmt, ":product_id", $product_id);
+    oci_bind_by_name($insertStmt, ":quantity", $quantity);
+    oci_execute($insertStmt);
+    oci_free_statement($insertStmt);
+  }
 
-if (!$product) {
-  die("Product not found.");
-}
+  // Get slug from product_id
+  $slugQuery = "SELECT slug FROM products WHERE product_id = :product_id";
+  $slugStmt = oci_parse($conn, $slugQuery);
+  oci_bind_by_name($slugStmt, ":product_id", $product_id);
+  oci_execute($slugStmt);
+  $slugRow = oci_fetch_assoc($slugStmt);
+  $slug = $slugRow['SLUG'];
 
-// Initialize cart session if not set
-if (!isset($_SESSION['cart'])) {
-  $_SESSION['cart'] = [];
-}
+  oci_free_statement($checkStmt);
+  oci_free_statement($slugStmt);
+  oci_close($conn);
 
-// Add or update product in cart
-if (isset($_SESSION['cart'][$product_id])) {
-  $_SESSION['cart'][$product_id]['quantity'] += $quantity;
+  $_SESSION['cart_success'] = "Product added to cart successfully!";
+  header("Location: ../trader/product-detail.php?slug=" . urlencode($slug) . "&added=1");
+  exit();
 } else {
-  $_SESSION['cart'][$product_id] = [
-    'product_name' => $product['PRODUCT_NAME'],
-    'price' => $product['PRICE'],
-    'quantity' => $quantity
-  ];
+  echo "<p style='color:red;'>Invalid product selected.</p>";
 }
-
-// Redirect back to product page or cart page
-header("Location: ../trader/product-detail.php?id=$product_id&added=1");
-exit;
-
-// <?php include '../includes/header.php'; 
-?>
-
-
-
-// <?php include '../includes/footer.php'; ?>

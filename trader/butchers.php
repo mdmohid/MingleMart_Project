@@ -91,28 +91,71 @@ oci_close($conn); // Close the database connection
     <div class="columns">
       <!-- Sidebar Filters -->
       <aside class="column is-3">
-        <h4 class="title is-5">Filter as you go...</h4>
+        <!-- <h4 class="title is-5">Filter as you go...</h4>
         <div class="box">
           <p><strong>Search</strong></p>
           <input class="input" type="text" placeholder="Search..." />
-        </div>
+        </div> -->
 
-        <div class="box">
+        <!-- <div class="box">
           <p><strong>Categories</strong></p>
           <label class="checkbox"><input type="checkbox" /> Fishmonger</label><br />
           <label class="checkbox"><input type="checkbox" /> Delicatessen</label><br />
           <label class="checkbox"><input type="checkbox" /> Butcher</label><br />
           <label class="checkbox"><input type="checkbox" /> Bakery</label><br />
           <label class="checkbox"><input type="checkbox" /> Greengrocer</label>
-        </div>
+        </div> -->
+
+        <!-- <div class="box">
+          <p><strong>Shop By Categories</strong></p>
+          <a href="fishmonger.php">Fishmonger</a><br />
+          <a href="delicatessen.php">Delicatessen</a><br />
+          <a href="butchers.php">Butcher</a><br />
+          <a href="bakery.php">Bakery</a><br />
+          <a href="greengrocer.php">Greengrocer</a>
+        </div> -->
 
         <div class="box">
+          <h4 class="title is-5">Select & Shop</h4>
+          <ul style="list-style-type: disc; padding-left: 1.5rem;">
+            <li>
+              <i class="fas fa-fish mr-2" style="color: #363636;"></i>
+              <a href="fishmonger.php">Fishmonger</a>
+            </li>
+            <li>
+              <i class="fas fa-cheese mr-2" style="color: #363636;"></i>
+              <a href="delicatessen.php">Delicatessen</a>
+            </li>
+            <li>
+              <i class="fas fa-drumstick-bite mr-2" style="color: #363636;"></i>
+              <a href="butchers.php">Butcher</a>
+            </li>
+            <li>
+              <i class="fas fa-bread-slice mr-2" style="color: #363636;"></i>
+              <a href="bakery.php">Bakery</a>
+            </li>
+            <li>
+              <i class="fas fa-apple-alt mr-2" style="color: #363636;"></i>
+              <a href="greengrocer.php">Greengrocer</a>
+            </li>
+          </ul>
+        </div>
+
+
+
+
+
+
+
+
+
+        <!-- <div class="box">
           <p><strong>Price</strong></p>
           <div class="field has-addons">
             <p class="control"><input class="input" type="number" placeholder="Min"></p>
             <p class="control"><input class="input" type="number" placeholder="Max"></p>
           </div>
-        </div>
+        </div> -->
       </aside>
 
       <!-- Product Grid -->
@@ -136,8 +179,10 @@ oci_close($conn); // Close the database connection
                     <p class="has-text-weight-bold">$<?php echo number_format($product['PRICE'], 2); ?></p>
                     <p class="has-text-warning">★★★★★</p>
                     <div class="buttons mt-2">
+
                       <a href="product-detail.php?slug=<?php echo urlencode($product['SLUG']); ?>" class="button is-small is-link">View Details</a>
-                      <a href="../customer/add-tocart.php?product_id=<?php echo $product['PRODUCT_ID']; ?>" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
+
+                      <!-- <a href="../customer/add-tocart.php?product_id=<?php echo $product['PRODUCT_ID']; ?>" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a> -->
                     </div>
                   </div>
                 </div>

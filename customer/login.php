@@ -16,13 +16,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $row = oci_fetch_assoc($stid);
 
 
+  // if ($row && password_verify($password, $row['PASSWORD'])) {
+  //   // Successful login
+  //   $_SESSION['user'] = $row['NAME'];
+  //   $_SESSION['user_id'] = $row['ID'];   // Add this line
+
+  //   // Redirect immediately after setting session
+  //   header("Location: customer-profile.php");  // Or dashboard.php if you want
+  //   exit();
   if ($row && password_verify($password, $row['PASSWORD'])) {
     // Successful login
     $_SESSION['user'] = $row['NAME'];
-    $_SESSION['user_id'] = $row['ID'];   // Add this line
+    $_SESSION['user_id'] = $row['ID'];
 
-    // Redirect immediately after setting session
-    header("Location: customer-profile.php");  // Or dashboard.php if you want
+    // Check if redirect URL is passed
+    $redirect_to = isset($_GET['redirect']) ? $_GET['redirect'] : 'customer-profile.php';
+
+    header("Location: " . htmlspecialchars($redirect_to));
     exit();
   } else {
     echo "<p style='color:red;'>Invalid email or password.</p>";
@@ -56,7 +66,9 @@ include '../includes/header.php';
       <p style="color:red; text-align:center;"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
-    <form action="login.php" method="POST">
+    <!-- <form action="login.php" method="POST"> -->
+    <form action="login.php<?= isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : '' ?>" method="POST">
+
       <div class="field">
         <label class="label">Email</label>
         <div class="control">
