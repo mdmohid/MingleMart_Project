@@ -1,4 +1,19 @@
-<?php include '../includes/header.php'; ?>
+<?php
+include '../includes/header.php';
+include '../config/config.php'; // Include database configuration
+
+// Fetch bakery products (assuming trader_id = 1 for bakery products)
+$sql = "SELECT product_id, product_name, price, image_url, slug FROM products WHERE trader_id = 1";
+$stid = oci_parse($conn, $sql);
+oci_execute($stid);
+
+$products = [];
+while ($row = oci_fetch_assoc($stid)) {
+  $products[] = $row;
+}
+oci_free_statement($stid);
+oci_close($conn); // Close the database connection
+?>
 
 <section class="section">
   <div class="container">
@@ -76,176 +91,64 @@
     <div class="columns">
       <!-- Sidebar Filters -->
       <aside class="column is-3">
-        <h4 class="title is-5">Filter as you go...</h4>
         <div class="box">
-          <p><strong>Search</strong></p>
-          <input class="input" type="text" placeholder="Search..." />
+          <h4 class="title is-5">Select & Shop</h4>
+          <ul style="list-style-type: disc; padding-left: 1.5rem;">
+            <li>
+              <i class="fas fa-fish mr-2" style="color: #363636;"></i>
+              <a href="fishmonger.php">Fishmonger</a>
+            </li>
+            <li>
+              <i class="fas fa-cheese mr-2" style="color: #363636;"></i>
+              <a href="delicatessen.php">Delicatessen</a>
+            </li>
+            <li>
+              <i class="fas fa-drumstick-bite mr-2" style="color: #363636;"></i>
+              <a href="butchers.php">Butcher</a>
+            </li>
+            <li>
+              <i class="fas fa-bread-slice mr-2" style="color: #363636;"></i>
+              <a href="bakery.php">Bakery</a>
+            </li>
+            <li>
+              <i class="fas fa-apple-alt mr-2" style="color: #363636;"></i>
+              <a href="greengrocer.php">Greengrocer</a>
+            </li>
+          </ul>
         </div>
-
-        <div class="box">
-          <p><strong>Categories</strong></p>
-          <label class="checkbox"><input type="checkbox" /> Fishmonger</label><br />
-          <label class="checkbox"><input type="checkbox" /> Delicatessen</label><br />
-          <label class="checkbox"><input type="checkbox" /> Butcher</label><br />
-          <label class="checkbox"><input type="checkbox" /> Bakery</label><br />
-          <label class="checkbox"><input type="checkbox" /> Greengrocer</label>
-        </div>
-
-        <div class="box">
-          <p><strong>Price</strong></p>
-          <div class="field has-addons">
-            <p class="control"><input class="input" type="number" placeholder="Min"></p>
-            <p class="control"><input class="input" type="number" placeholder="Max"></p>
-          </div>
-        </div>
-
-
       </aside>
 
       <!-- Product Grid -->
       <div class="column is-9">
         <h4 class="title is-5">Bakery Products</h4>
         <div class="columns is-multiline" id="product-list">
-
-          <!-- Product 1 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/bakery/bakery1.jpg" alt="Sourdough Bread">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Sweet Loaf Bakery</p>
-                <p class="title is-6">Sourdough Bread</p>
-                <p class="has-text-weight-bold">$4.99</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
+          <?php if (empty($products)): ?>
+            <p>No products found.</p>
+          <?php else: ?>
+            <?php foreach ($products as $product): ?>
+              <div class="column is-4">
+                <div class="card">
+                  <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img src="<?php echo htmlspecialchars($product['IMAGE_URL']); ?>" alt="<?php echo htmlspecialchars($product['PRODUCT_NAME']); ?>">
+                    </figure>
+                  </div>
+                  <div class="card-content">
+                    <p class="subtitle is-6"><i class="fas fa-store"></i> Bakery Shop</p>
+                    <p class="title is-6"><?php echo htmlspecialchars($product['PRODUCT_NAME']); ?></p>
+                    <p class="has-text-weight-bold">$<?php echo number_format($product['PRICE'], 2); ?></p>
+                    <p class="has-text-warning">★★★★★</p>
+                    <div class="buttons mt-2">
+                      <a href="product-detail.php?slug=<?php echo urlencode($product['SLUG']); ?>" class="button is-small is-link">View Details</a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Product 2 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/bakery/bakery2.jpg" alt="Croissants">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Parisian Bakes</p>
-                <p class="title is-6">Buttery Croissants</p>
-                <p class="has-text-weight-bold">$3.50</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product 3 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/bakery/bakery3.jpg" alt="Chocolate Muffins">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Muffin House</p>
-                <p class="title is-6">Chocolate Muffins (Pack of 4)</p>
-                <p class="has-text-weight-bold">$6.00</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product 4 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/bakery/bakery4.jpg" alt="Blueberry Pie">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Berry Bakehouse</p>
-                <p class="title is-6">Homemade Blueberry Pie</p>
-                <p class="has-text-weight-bold">$8.99</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product 5 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/bakery/bakery5.jpg" alt="Banana Bread">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Grandma’s Oven</p>
-                <p class="title is-6">Banana Bread Loaf</p>
-                <p class="has-text-weight-bold">$5.25</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product 6 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/bakery/bakery6.jpg" alt="Cinnamon Rolls">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Roll & Rise</p>
-                <p class="title is-6">Cinnamon Rolls (Pack of 3)</p>
-                <p class="has-text-weight-bold">$4.75</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
-
-        <!-- Pagination
-        <nav class="pagination is-centered mt-4" role="navigation">
-          <a class="pagination-link is-current">1</a>
-          <a class="pagination-link">2</a>
-          <a class="pagination-link">3</a>
-        </nav> -->
-
       </div>
     </div>
-
   </div>
 </section>
 

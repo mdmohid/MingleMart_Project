@@ -1,4 +1,19 @@
-<?php include '../includes/header.php'; ?>
+<?php
+include '../includes/header.php';
+include '../config/config.php'; // Include database configuration
+
+// Fetch greengrocer products (assuming trader_id = 3 for greengrocer products)
+$sql = "SELECT product_id, product_name, price, image_url, slug FROM products WHERE trader_id = 3";
+$stid = oci_parse($conn, $sql);
+oci_execute($stid);
+
+$products = [];
+while ($row = oci_fetch_assoc($stid)) {
+  $products[] = $row;
+}
+oci_free_statement($stid);
+oci_close($conn); // Close the database connection
+?>
 
 <section class="section">
   <div class="container">
@@ -76,174 +91,63 @@
     <div class="columns">
       <!-- Sidebar Filters -->
       <aside class="column is-3">
-        <h4 class="title is-5">Filter as you go...</h4>
         <div class="box">
-          <p><strong>Search</strong></p>
-          <input class="input" type="text" placeholder="Search..." />
+          <h4 class="title is-5">Select & Shop</h4>
+          <ul style="list-style-type: disc; padding-left: 1.5rem;">
+            <li>
+              <i class="fas fa-fish mr-2" style="color: #363636;"></i>
+              <a href="fishmonger.php">Fishmonger</a>
+            </li>
+            <li>
+              <i class="fas fa-cheese mr-2" style="color: #363636;"></i>
+              <a href="delicatessen.php">Delicatessen</a>
+            </li>
+            <li>
+              <i class="fas fa-drumstick-bite mr-2" style="color: #363636;"></i>
+              <a href="butchers.php">Butcher</a>
+            </li>
+            <li>
+              <i class="fas fa-bread-slice mr-2" style="color: #363636;"></i>
+              <a href="bakery.php">Bakery</a>
+            </li>
+            <li>
+              <i class="fas fa-apple-alt mr-2" style="color: #363636;"></i>
+              <a href="greengrocer.php">Greengrocer</a>
+            </li>
+          </ul>
         </div>
-
-        <div class="box">
-          <p><strong>Categories</strong></p>
-          <label class="checkbox"><input type="checkbox" /> Fishmonger</label><br />
-          <label class="checkbox"><input type="checkbox" /> Delicatessen</label><br />
-          <label class="checkbox"><input type="checkbox" /> Butcher</label><br />
-          <label class="checkbox"><input type="checkbox" /> Bakery</label><br />
-          <label class="checkbox"><input type="checkbox" /> Greengrocer</label>
-        </div>
-
-        <div class="box">
-          <p><strong>Price</strong></p>
-          <div class="field has-addons">
-            <p class="control"><input class="input" type="number" placeholder="Min"></p>
-            <p class="control"><input class="input" type="number" placeholder="Max"></p>
-          </div>
-        </div>
-
-
       </aside>
 
       <!-- Product Grid -->
       <div class="column is-9">
-        <h4 class="title is-5">Greengrocers Products</h4>
+        <h4 class="title is-5">Greengrocer Products</h4>
         <div class="columns is-multiline" id="product-list">
+          <?php if (empty($products)): ?>
+            <p>No products found.</p>
+          <?php else: ?>
+            <?php foreach ($products as $product): ?>
+              <div class="column is-4">
+                <div class="card">
+                  <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img src="<?php echo htmlspecialchars($product['IMAGE_URL']); ?>" alt="<?php echo htmlspecialchars($product['PRODUCT_NAME']); ?>">
+                    </figure>
+                  </div>
+                  <div class="card-content">
+                    <p class="subtitle is-6"><i class="fas fa-store"></i> Greengrocer Shop</p>
+                    <p class="title is-6"><?php echo htmlspecialchars($product['PRODUCT_NAME']); ?></p>
+                    <p class="has-text-weight-bold">$<?php echo number_format($product['PRICE'], 2); ?></p>
+                    <p class="has-text-warning">★★★★★</p>
+                    <div class="buttons mt-2">
+                      <a href="product-detail.php?slug=<?php echo urlencode($product['SLUG']); ?>" class="button is-small is-link">View Details</a>
 
-
-          <!-- Greengrocers Product 1 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/greengrocer/greenapple1.jpg" alt="Fresh Apples">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Green Valley</p>
-                <p class="title is-6">Fresh Red Apples (1kg)</p>
-                <p class="has-text-weight-bold">$2.99</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Greengrocers Product 2 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/greengrocer/greenbanana2.jpg" alt="Organic Bananas">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Nature’s Basket</p>
-                <p class="title is-6">Organic Bananas (1kg)</p>
-                <p class="has-text-weight-bold">$1.80</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Greengrocers Product 3 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/greengrocer/greenbroccoli3.jpg" alt="Fresh Broccoli">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Farm Fresh</p>
-                <p class="title is-6">Green Broccoli (500g)</p>
-                <p class="has-text-weight-bold">$2.20</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Greengrocers Product 4 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/greengrocer/greencarrot4.jpg" alt="Organic Carrots">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Veggie Delight</p>
-                <p class="title is-6">Organic Carrots (1kg)</p>
-                <p class="has-text-weight-bold">$1.90</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Greengrocers Product 5 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/greengrocer/greentomatoes.jpg" alt="Cherry Tomatoes">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Tomato Town</p>
-                <p class="title is-6">Cherry Tomatoes (250g)</p>
-                <p class="has-text-weight-bold">$2.50</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Greengrocers Product 6 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/greengrocer/greenspinach6.jpg" alt="Baby Spinach">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Leaf & Root</p>
-                <p class="title is-6">Baby Spinach (200g)</p>
-                <p class="has-text-weight-bold">$2.30</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
-
-        <!-- Pagination
-        <nav class="pagination is-centered mt-4" role="navigation">
-          <a class="pagination-link is-current">1</a>
-          <a class="pagination-link">2</a>
-          <a class="pagination-link">3</a>
-        </nav> -->
-
       </div>
     </div>
 

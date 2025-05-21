@@ -1,142 +1,117 @@
-<?php
-session_start();
-include '../config/config.php';
+<!-- Bulma CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php?redirect=invoice.php");
-  exit();
-}
+<!-- Trigger Button
+<button class="button is-primary" id="openPaymentModal">
+  <span class="icon"><i class="fas fa-wallet"></i></span>
+  <span>Choose Payment Method</span>
+</button> -->
 
-$customer_id = $_SESSION['user_id'];
-
-// Fetch cart items
-$sql = "SELECT p.product_name, p.price, c.quantity, (p.price * c.quantity) AS subtotal
-        FROM carts c
-        JOIN products p ON c.product_id = p.product_id
-        WHERE c.id = :id";
-$stmt = oci_parse($conn, $sql);
-oci_bind_by_name($stmt, ":id", $customer_id);
-oci_execute($stmt);
-
-$cartItems = [];
-$total = 0;
-
-while ($row = oci_fetch_assoc($stmt)) {
-  $cartItems[] = $row;
-  $total += $row['SUBTOTAL'];
-}
-oci_free_statement($stmt);
-oci_close($conn);
-?>
-
-<?php include '../includes/header.php'; ?>
-
-<section class="section">
-  <div class="container">
-    <h1 class="title is-3">Invoice & Payment</h1>
-
-    <?php if (count($cartItems) > 0): ?>
-      <div class="box">
-        <h2 class="subtitle">Order Summary</h2>
-        <table class="table is-fullwidth is-striped">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($cartItems as $item): ?>
-              <tr>
-                <td><?= htmlspecialchars($item['PRODUCT_NAME']) ?></td>
-                <td>$<?= number_format($item['PRICE'], 2) ?></td>
-                <td><?= $item['QUANTITY'] ?></td>
-                <td>$<?= number_format($item['SUBTOTAL'], 2) ?></td>
-              </tr>
-            <?php endforeach; ?>
-            <tr>
-              <th colspan="3" class="has-text-right">Total:</th>
-              <th>$<?= number_format($total, 2) ?></th>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Payment Options -->
-      <div class="box has-text-centered">
-        <h2 class="subtitle">Choose Payment Method</h2>
-        <button class="button is-primary is-medium" id="payNowBtn">
+<!-- Payment Method Modal -->
+<div class="modal" id="paymentModal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Select Payment Method</p>
+      <button class="delete" aria-label="close" id="closeModal"></button>
+    </header>
+    <section class="modal-card-body">
+      <p class="title is-6 mb-3">Choose how you want to pay:</p>
+      <div class="buttons">
+        <a href="https://www.paypal.com/" class="button is-link is-medium">
+          <span class="icon"><i class="fab fa-paypal"></i></span>
+          <span>PayPal</span>
+        </a>
+        <a href="credit-card.php" class="button is-info is-medium">
           <span class="icon"><i class="fas fa-credit-card"></i></span>
-          <span>Pay Now</span>
-        </button>
+          <span>Credit Card</span>
+        </a>
+        <a href="cod.php" class="button is-dark is-medium">
+          <span class="icon"><i class="fas fa-box"></i></span>
+          <span>Cash on Delivery</span>
+        </a>
       </div>
-
-      <!-- Modal -->
-      <div class="modal" id="paymentModal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Complete Your Payment</p>
-            <button class="delete" aria-label="close"></button>
-          </header>
-          <section class="modal-card-body has-text-centered">
-            <p class="mb-4">Total: <strong>$<?= number_format($total, 2) ?></strong></p>
-            <!-- PayPal Button -->
-            <div id="paypal-button-container"></div>
-            <p class="mt-4">or</p>
-            <a href="credit-card.php" class="button is-dark mt-3">Pay with Credit/Debit Card</a>
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button cancel-button">Cancel</button>
-          </footer>
-        </div>
-      </div>
-
-    <?php else: ?>
-      <div class="notification is-warning">Your cart is empty.</div>
-    <?php endif; ?>
+    </section>
+    <footer class="modal-card-foot is-justify-content-flex-end">
+      <button class="button" id="cancelModal">Cancel</button>
+    </footer>
   </div>
-</section>
+</div>
 
-<?php include '../includes/footer.php'; ?>
+<!-- Modal Control Script -->
+<!-- <script>
+  // const modal = document.getElementById('paymentModal');
+  // const openBtn = document.getElementById('openPaymentModal');
+  // const closeBtn = document.getElementById('closeModal');
+  // const cancelBtn = document.getElementById('cancelModal');
 
-<!-- ✅ PayPal SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID_HERE&currency=USD"></script>
+  // openBtn.addEventListener('click', () => {
+  //   modal.classList.add('is-active');
+  // });
+
+  // closeBtn.addEventListener('click', () => {
+  //   modal.classList.remove('is-active');
+  // });
+
+  // cancelBtn.addEventListener('click', () => {
+  //   modal.classList.remove('is-active');
+  // });
+
+  // // Optional: Close modal when clicking outside
+  // modal.querySelector('.modal-background').addEventListener('click', () => {
+  //   modal.classList.remove('is-active');
+  // });
+
+
+  const modal = document.getElementById('paymentModal');
+  // Remove references to openBtn, since button is gone
+  const closeBtn = document.getElementById('closeModal');
+  const cancelBtn = document.getElementById('cancelModal');
+
+  // Show modal immediately on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    modal.classList.add('is-active');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('is-active');
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    modal.classList.remove('is-active');
+  });
+
+  // Close modal when clicking outside
+  modal.querySelector('.modal-background').addEventListener('click', () => {
+    modal.classList.remove('is-active');
+  });
+</script> -->
+
+
+
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('paymentModal');
-    const payNowBtn = document.getElementById('payNowBtn');
-    const closeBtns = modal.querySelectorAll('.delete, .cancel-button');
+  const modal = document.getElementById('paymentModal');
+  const closeBtn = document.getElementById('closeModal');
+  const cancelBtn = document.getElementById('cancelModal');
 
-    payNowBtn.addEventListener('click', () => {
-      modal.classList.add('is-active');
-    });
+  // URL to redirect after closing modal
+  const productDetailURL = '../trader/product-detail.php'; // change this to your actual product detail URL
 
-    closeBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        modal.classList.remove('is-active');
-      });
-    });
-
-    paypal.Buttons({
-      createOrder: function(data, actions) {
-        return actions.order.create({
-          purchase_units: [{
-            amount: {
-              value: '<?= number_format($total, 2, '.', '') ?>'
-            }
-          }]
-        });
-      },
-      onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-          alert('Payment completed by ' + details.payer.name.given_name + '!');
-          window.location.href = 'place-order.php';
-        });
-      }
-    }).render('#paypal-button-container');
+  window.addEventListener('DOMContentLoaded', () => {
+    modal.classList.add('is-active');
   });
+
+  function closeModalAndRedirect() {
+    modal.classList.remove('is-active');
+    // Redirect after modal closes
+    window.location.href = productDetailURL;
+  }
+
+  closeBtn.addEventListener('click', closeModalAndRedirect);
+  cancelBtn.addEventListener('click', closeModalAndRedirect);
+
+  modal.querySelector('.modal-background').addEventListener('click', closeModalAndRedirect);
 </script>

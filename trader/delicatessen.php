@@ -1,4 +1,19 @@
-<?php include '../includes/header.php'; ?>
+<?php
+include '../includes/header.php';
+include '../config/config.php'; // Include database configuration
+
+// Fetch bakery products (assuming trader_id = 4 for delicatessen products)
+$sql = "SELECT product_id, product_name, price, image_url, slug FROM products WHERE trader_id = 4";
+$stid = oci_parse($conn, $sql);
+oci_execute($stid);
+
+$products = [];
+while ($row = oci_fetch_assoc($stid)) {
+  $products[] = $row;
+}
+oci_free_statement($stid);
+oci_close($conn); // Close the database connection
+?>
 
 <section class="section">
   <div class="container">
@@ -76,177 +91,64 @@
     <div class="columns">
       <!-- Sidebar Filters -->
       <aside class="column is-3">
-        <h4 class="title is-5">Filter as you go...</h4>
         <div class="box">
-          <p><strong>Search</strong></p>
-          <input class="input" type="text" placeholder="Search..." />
+          <h4 class="title is-5">Select & Shop</h4>
+          <ul style="list-style-type: disc; padding-left: 1.5rem;">
+            <li>
+              <i class="fas fa-fish mr-2" style="color: #363636;"></i>
+              <a href="fishmonger.php">Fishmonger</a>
+            </li>
+            <li>
+              <i class="fas fa-cheese mr-2" style="color: #363636;"></i>
+              <a href="delicatessen.php">Delicatessen</a>
+            </li>
+            <li>
+              <i class="fas fa-drumstick-bite mr-2" style="color: #363636;"></i>
+              <a href="butchers.php">Butcher</a>
+            </li>
+            <li>
+              <i class="fas fa-bread-slice mr-2" style="color: #363636;"></i>
+              <a href="bakery.php">Bakery</a>
+            </li>
+            <li>
+              <i class="fas fa-apple-alt mr-2" style="color: #363636;"></i>
+              <a href="greengrocer.php">Greengrocer</a>
+            </li>
+          </ul>
         </div>
-
-        <div class="box">
-          <p><strong>Categories</strong></p>
-          <label class="checkbox"><input type="checkbox" /> Fishmonger</label><br />
-          <label class="checkbox"><input type="checkbox" /> Delicatessen</label><br />
-          <label class="checkbox"><input type="checkbox" /> Butcher</label><br />
-          <label class="checkbox"><input type="checkbox" /> Bakery</label><br />
-          <label class="checkbox"><input type="checkbox" /> Greengrocer</label>
-        </div>
-
-        <div class="box">
-          <p><strong>Price</strong></p>
-          <div class="field has-addons">
-            <p class="control"><input class="input" type="number" placeholder="Min"></p>
-            <p class="control"><input class="input" type="number" placeholder="Max"></p>
-          </div>
-        </div>
-
-
       </aside>
 
       <!-- Product Grid -->
       <div class="column is-9">
         <h4 class="title is-5">Delicatessen Products</h4>
         <div class="columns is-multiline" id="product-list">
-
-
-          <!-- Delicatessen Product 1 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/delicatessen/cheddar1.jpg" alt="Mature Cheddar">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> The Cheese Cellar</p>
-                <p class="title is-6">Mature Cheddar (250g)</p>
-                <p class="has-text-weight-bold">$4.25</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
+          <?php if (empty($products)): ?>
+            <p>No products found.</p>
+          <?php else: ?>
+            <?php foreach ($products as $product): ?>
+              <div class="column is-4">
+                <div class="card">
+                  <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img src="<?php echo htmlspecialchars($product['IMAGE_URL']); ?>" alt="<?php echo htmlspecialchars($product['PRODUCT_NAME']); ?>">
+                    </figure>
+                  </div>
+                  <div class="card-content">
+                    <p class="subtitle is-6"><i class="fas fa-store"></i> Bakery Shop</p>
+                    <p class="title is-6"><?php echo htmlspecialchars($product['PRODUCT_NAME']); ?></p>
+                    <p class="has-text-weight-bold">$<?php echo number_format($product['PRICE'], 2); ?></p>
+                    <p class="has-text-warning">★★★★★</p>
+                    <div class="buttons mt-2">
+                      <a href="product-detail.php?slug=<?php echo urlencode($product['SLUG']); ?>" class="button is-small is-link">View Details</a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Delicatessen Product 2 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/delicatessen/briecheese2.jpg" alt="Brie Cheese">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> French Fare</p>
-                <p class="title is-6">Creamy Brie (200g)</p>
-                <p class="has-text-weight-bold">$5.10</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Delicatessen Product 3 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/delicatessen/marinatedolives3.jpg" alt="Marinated Olives">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Olive Grove</p>
-                <p class="title is-6">Marinated Olives (150g)</p>
-                <p class="has-text-weight-bold">$3.75</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Delicatessen Product 4 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/delicatessen/prosciutto4.jpg" alt="Prosciutto">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Italian Cuts</p>
-                <p class="title is-6">Prosciutto (100g)</p>
-                <p class="has-text-weight-bold">$6.40</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Delicatessen Product 5 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/delicatessen/hummus5.jpg" alt="Classic Hummus">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Deli Dips</p>
-                <p class="title is-6">Classic Hummus (200g)</p>
-                <p class="has-text-weight-bold">$3.20</p>
-                <p class="has-text-warning">★★★★☆</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Delicatessen Product 6 -->
-          <div class="column is-4">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="../assets/images/delicatessen/cheese6.png" alt="Greek Feta Cheese">
-                </figure>
-              </div>
-              <div class="card-content">
-                <p class="subtitle is-6"><i class="fas fa-store"></i> Mediterranean Delights</p>
-                <p class="title is-6">Greek Feta Cheese (250g)</p>
-                <p class="has-text-weight-bold">$4.90</p>
-                <p class="has-text-warning">★★★★★</p>
-                <div class="buttons mt-2">
-                  <a href="#" class="button is-small is-link">View Details</a>
-                  <a href="#" class="button is-small is-primary"><i class="fas fa-cart-plus"></i> Add</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
-
-        <!-- Pagination
-        <nav class="pagination is-centered mt-4" role="navigation">
-          <a class="pagination-link is-current">1</a>
-          <a class="pagination-link">2</a>
-          <a class="pagination-link">3</a>
-        </nav> -->
-
       </div>
     </div>
-
   </div>
 </section>
 
