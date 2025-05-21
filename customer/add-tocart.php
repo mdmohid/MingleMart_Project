@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'config.php';
+include '../config/config.php';
 
 // Validate inputs
 if (!isset($_POST['product_id'], $_POST['quantity'])) {
@@ -16,7 +16,7 @@ if ($quantity < 1) {
 
 // Optionally, verify product exists before adding to cart
 $sql = "SELECT product_id, product_name, price FROM products WHERE product_id = :pid";
-$stid = oci_parse($db_conn, $sql);
+$stid = oci_parse($conn, $sql);
 oci_bind_by_name($stid, ':pid', $product_id);
 oci_execute($stid);
 $product = oci_fetch_assoc($stid);
@@ -42,11 +42,12 @@ if (isset($_SESSION['cart'][$product_id])) {
 }
 
 // Redirect back to product page or cart page
-header("Location: product_detail.php?id=$product_id&added=1");
+header("Location: ../trader/product-detail.php?id=$product_id&added=1");
 exit;
 
-<?php include '../includes/header.php'; ?>
+// <?php include '../includes/header.php'; 
+?>
 
 
 
-<?php include '../includes/footer.php'; ?>
+// <?php include '../includes/footer.php'; ?>

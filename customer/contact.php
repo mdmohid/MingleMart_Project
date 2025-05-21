@@ -18,8 +18,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   oci_bind_by_name($stid, ':subject', $subject);
   oci_bind_by_name($stid, ':feedback', $feedback);
 
+  // if (oci_execute($stid)) {
+  //   echo "<p class='has-text-success has-text-centered'>Thank you! Your message has been received.</p>";
+  // } else {
+  //   $e = oci_error($stid);
+  //   echo "<p class='has-text-danger has-text-centered'>Error: " . htmlentities($e['message']) . "</p>";
+  // }
+
   if (oci_execute($stid)) {
-    echo "<p class='has-text-success has-text-centered'>Thank you! Your message has been received.</p>";
+    // Send confirmation/notification email
+    $to = "alammohid855@gmail.com"; // Change to your admin/support email
+    $email_subject = "New Contact Message from $name";
+    $email_body = "You received a new message via MingleMart contact form:\n\n" .
+      "Name: $name\n" .
+      "Email: $email\n" .
+      "Subject: $subject\n" .
+      "Feedback:\n$feedback\n\n" .
+      "Please respond promptly.";
+
+    $headers = "From: alammohid855@gmail.com"; // Replace with your verified sender email
+
+    if (mail($to, $email_subject, $email_body, $headers)) {
+      echo "<p class='has-text-success has-text-centered'>Thank you! Your message has been received and emailed to our support team.</p>";
+    } else {
+      echo "<p class='has-text-warning has-text-centered'>Message saved, but failed to send email notification.</p>";
+    }
   } else {
     $e = oci_error($stid);
     echo "<p class='has-text-danger has-text-centered'>Error: " . htmlentities($e['message']) . "</p>";
@@ -67,8 +90,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
       </div>
     </form>
+
+
   </div>
 </section>
+
+
 
 <script src="../assets/js/script.js"></script>
 
