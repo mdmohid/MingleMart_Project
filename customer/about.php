@@ -165,13 +165,11 @@
       </div>
 
       <div class="has-text-centered mt-5">
-        <a href="contact.php" class="button is-primary is-large">Become a Vendor</a>
-        <a href="products.php" class="button is-link is-large ml-3">Shop Now</a>
+        <a href="../trader/register-trader.php" class="button is-primary is-large">Become a Vendor</a>
+        <a href="../trader/butchers.php" class="button is-link is-large ml-3">Shop Now</a>
       </div>
     </div>
   </div>
 </section>
-
-
 
 <?php include '../includes/footer.php'; ?>
