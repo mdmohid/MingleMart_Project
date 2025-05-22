@@ -66,7 +66,9 @@ include '../includes/header.php';
                     <div class="field">
                       <label class="label">Quantity:</label>
                       <div class="control">
-                        <input class="input" type="number" name="quantity" value="1" min="1" style="width: 100px;">
+                        <!-- <input class="input" type="number" name="quantity" value="1" min="1" style="width: 100px;"> -->
+                        <input class="input" type="number" name="quantity" value="1" min="1" max="20" style="width: 100px;">
+
                       </div>
                     </div>
                     <div class="field is-grouped mt-3">

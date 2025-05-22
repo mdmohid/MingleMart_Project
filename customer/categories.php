@@ -85,7 +85,7 @@
     </div>
 
     <!-- New Trader -->
-    <div class="column is-4">
+    <!-- <div class="column is-4">
       <a href="../trader/">
         <div class="card category-card">
           <div class="card-image">
@@ -98,7 +98,7 @@
           </div>
         </div>
       </a>
-    </div>
+    </div> -->
 
   </div>
 </section>

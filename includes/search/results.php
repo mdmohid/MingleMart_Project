@@ -16,7 +16,7 @@ if ($search) {
     echo "<div class='box'>
                 <strong>{$row['PRODUCT_NAME']}</strong><br>
                 Price: {$row['PRICE']}<br>
-                Category: {$row['CATEGORY']}
+                
               </div>";
     $found = true;
   }

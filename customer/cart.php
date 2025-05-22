@@ -1,7 +1,7 @@
 <?php
 session_start();
 include '../config/config.php';
-include '../includes/header.php';
+// include '../includes/header.php';
 
 // Check customer login
 if (!isset($_SESSION['user_id'])) {
@@ -34,6 +34,7 @@ while ($row = oci_fetch_assoc($stid)) {
   $cartItems[] = $row;
   $total += $row['SUBTOTAL'];
 }
+include '../includes/header.php';
 ?>
 
 <section class="section">

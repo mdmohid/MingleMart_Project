@@ -156,8 +156,11 @@
           </div>
         </div>
       </div>
-      <div class="has-text-centered mb-5">
+      <!-- <div class="has-text-centered mb-5">
         <button class="button is-small is-dark is-outlined">Product Details</button>
+      </div> -->
+      <div class="has-text-centered mb-5">
+        <a href="/MingleMart_Project/trader/butchers.php" class="button is-small is-dark is-outlined">Select & Shop</a>
       </div>
     </div>
   </section>
