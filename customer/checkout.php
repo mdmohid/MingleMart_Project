@@ -164,7 +164,7 @@ include '../includes/header.php';
               <button class="button is-success" type="submit">Yes, Place Order</button>
             </form> -->
             <!-- ✅ NEW: Redirect to invoice.php instead -->
-            <a href="https://www.paypal.com/" class="button is-success">Yes, Continue to Payment through paypal</a>
+            <a href="bill.php" class="button is-success">Yes, Continue to Payment through paypal</a>
             <button class="button cancel-button">Cancel</button>
           </footer>
         </div>

@@ -81,7 +81,13 @@ include '../includes/header.php';
                         </button>
                       </div>
                       <div class="control">
-                        <a href="../customer/invoice.php" class="button is-success is-medium">
+                        <!-- <a href="../customer/invoice.php" class="button is-success is-medium">
+                          <span class="icon">
+                            <i class="fas fa-shopping-bag"></i>
+                          </span>
+                          <span>Buy Now</span>
+                        </a> -->
+                        <a href="../customer/bill.php" class="button is-success is-medium">
                           <span class="icon">
                             <i class="fas fa-shopping-bag"></i>
                           </span>

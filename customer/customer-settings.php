@@ -65,6 +65,42 @@ if (!$row) {
 // }
 
 // After form submission
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && $row) {
+//   $name = $_POST['name'] ?? '';
+//   $email = $_POST['email'] ?? '';
+//   $gender = $_POST['gender'] ?? '';
+//   $contact = $_POST['contact'] ?? '';
+//   $address = $_POST['address'] ?? '';
+//   $profile_image = $row['PROFILE_IMAGE'] ?? null;
+
+//   // Image upload code remains same...
+
+//   if (!$error) {
+//     $update = "UPDATE customers SET name = :name, email = :email, gender = :gender, contact = :contact, address = :address, profile_image = :image WHERE id = :id";
+//     $stmt = oci_parse($conn, $update);
+//     oci_bind_by_name($stmt, ":name", $name);
+//     oci_bind_by_name($stmt, ":email", $email);
+//     oci_bind_by_name($stmt, ":gender", $gender);
+//     oci_bind_by_name($stmt, ":contact", $contact);
+//     oci_bind_by_name($stmt, ":address", $address);
+//     oci_bind_by_name($stmt, ":image", $profile_image);
+//     oci_bind_by_name($stmt, ":id", $id);
+
+//     if (oci_execute($stmt)) {
+//       $success = "Profile updated successfully.";
+//       // Refresh $row for form display
+//       $row['NAME'] = $name;
+//       $row['EMAIL'] = $email;
+//       $row['GENDER'] = $gender;
+//       $row['CONTACT'] = $contact;
+//       $row['ADDRESS'] = $address;
+//       $row['PROFILE_IMAGE'] = $profile_image;
+//     } else {
+//       $error = "Update failed.";
+//     }
+//   }
+// }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $row) {
   $name = $_POST['name'] ?? '';
   $email = $_POST['email'] ?? '';
@@ -73,7 +109,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $row) {
   $address = $_POST['address'] ?? '';
   $profile_image = $row['PROFILE_IMAGE'] ?? null;
 
-  // Image upload code remains same...
+  // Handle profile image upload
+  if (!empty($_FILES['profile_image']['name'])) {
+    $image_name = basename($_FILES['profile_image']['name']);
+    $target_dir = "../uploads/customers/";
+    $target_file = $target_dir . $image_name;
+
+    if (!is_dir($target_dir)) {
+      mkdir($target_dir, 0777, true);
+    }
+
+    if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
+      $profile_image = $image_name;
+    } else {
+      $error = "Failed to upload image.";
+    }
+  }
 
   if (!$error) {
     $update = "UPDATE customers SET name = :name, email = :email, gender = :gender, contact = :contact, address = :address, profile_image = :image WHERE id = :id";
@@ -88,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $row) {
 
     if (oci_execute($stmt)) {
       $success = "Profile updated successfully.";
-      // Refresh $row for form display
+      // Refresh row
       $row['NAME'] = $name;
       $row['EMAIL'] = $email;
       $row['GENDER'] = $gender;
